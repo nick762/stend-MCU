@@ -399,34 +399,34 @@ void cellNumber(){
       }
       break;
     case 1: 
-      if(wire215._cellNum() == 16){
+      if(wire215._cellNum() == 1){
         Serial.println("1 cells");
         MAX_VOLTAGE = 4200;
         MIN_VOLTAGE = 2950;      
-      }else if(wire215._cellNum() == 32){
+      }else if(wire215._cellNum() == 2){
         Serial.println("2 cells");
         MAX_VOLTAGE = 8250;
         MIN_VOLTAGE = 5900;      
-      }else if(wire215._cellNum() == 48){        
+      }else if(wire215._cellNum() == 3){        
         Serial.println("3 cells");
       // MAX_VOLTAGE = 16550;
       // MIN_VOLTAGE = 14260;
-      }else if(wire215._cellNum() == 64){
+      }else if(wire215._cellNum() == 4){
         Serial.println("4 cells");
         // MAX_VOLTAGE = 16550;
       // MIN_VOLTAGE = 14260;
       }
       break;
     case 2:    
-      if(wire320._cellNum() == 0){      
+      if(wire320._cellNum() == 2){      
         Serial.println("2 cells");
         MAX_VOLTAGE = 8250;
         MIN_VOLTAGE = 5900;      
-      }else if(wire320._cellNum() == 64){        
+      }else if(wire320._cellNum() == 3){        
         Serial.println("3 cells");
       // MAX_VOLTAGE = 16550;
       // MIN_VOLTAGE = 14260;
-      }else if(wire320._cellNum() == 128){
+      }else if(wire320._cellNum() == 4){
         Serial.println("4 cells");
         // MAX_VOLTAGE = 16550;
       // MIN_VOLTAGE = 14260;

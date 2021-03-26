@@ -43,24 +43,33 @@ void setup() {
       type = 3;
     }
   }
+  Serial.println(type);
   cellNumber();
   Serial.println(MAX_VOLTAGE);
   Serial.println(MIN_VOLTAGE);
 }
 
+void(* resetFunc) (void) = 0;
+
 void loop() {
 
   switch (type){
     case 0:
+    {
       str = "@" + stnd.GetData()+"," + String(c_charging) + "," + String(c_discharging) + "," + String(charging) + "," + String(discharging) + "#";
+    }
       delay(400);
       break;
     case 1:
+    {
       str = "@" + wire215.GetData()+"," + String(c_charging) + "," + String(c_discharging) + "," + String(charging) + "," + String(discharging) + "#";
+    }
       delay(400);
       break;
     case 2:
+    {
       str = "@" + wire320.GetData()+"," + String(c_charging) + "," + String(c_discharging) + "," + String(charging) + "," + String(discharging) + "#";
+    }
       delay(400);
       break;
   }  
@@ -254,6 +263,7 @@ void loop() {
         discharging = false;
         digitalWrite(CHARGE, LOW);
         digitalWrite(DISCHARGE, LOW);
+        resetFunc();
         break;
       case 'k':
         if(sen == true){
@@ -264,10 +274,6 @@ void loop() {
         break;            
     }
   }
-  //if (sen){
-  //  Serial.println(str);
-  //  Serial.flush();
-  //}
 }
 
 void sendData() {
@@ -392,10 +398,6 @@ void cellNumber(){
         Serial.println("2 cells");
         MAX_VOLTAGE = 8250;
         MIN_VOLTAGE = 5900;
-      }else if(stnd.readCellsNum() == 3){
-        Serial.println("4 cells");
-      // MAX_VOLTAGE = 12350;
-      // MIN_VOLTAGE = 11970;      
       }
       break;
     case 1: 
@@ -411,10 +413,6 @@ void cellNumber(){
         Serial.println("3 cells");
       // MAX_VOLTAGE = 16550;
       // MIN_VOLTAGE = 14260;
-      }else if(wire215._cellNum() == 4){
-        Serial.println("4 cells");
-        // MAX_VOLTAGE = 16550;
-      // MIN_VOLTAGE = 14260;
       }
       break;
     case 2:    
@@ -425,10 +423,6 @@ void cellNumber(){
       }else if(wire320._cellNum() == 3){        
         Serial.println("3 cells");
       // MAX_VOLTAGE = 16550;
-      // MIN_VOLTAGE = 14260;
-      }else if(wire320._cellNum() == 4){
-        Serial.println("4 cells");
-        // MAX_VOLTAGE = 16550;
       // MIN_VOLTAGE = 14260;
       }
       break;

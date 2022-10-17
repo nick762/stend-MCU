@@ -27,6 +27,8 @@ bool cells = true; //true = 4 cells
 uint16_t MAX_VOLTAGE = 16550;
 uint16_t MIN_VOLTAGE = 14260;
 
+void(* resetFunc) (void) = 0;
+
 void setup() {
   TWBR=144;
   Serial.begin(9600);
@@ -40,27 +42,36 @@ void setup() {
     }else if(wire215._readType() == 0x90){
       type = 2;
     }else{
-      type = 3;
+      delay(100);
+      resetFunc();
     }
   }
+  Serial.println(type);
   cellNumber();
   Serial.println(MAX_VOLTAGE);
   Serial.println(MIN_VOLTAGE);
+  Serial.println(MIN_CURRENT);
 }
 
 void loop() {
 
   switch (type){
     case 0:
+    {
       str = "@" + stnd.GetData()+"," + String(c_charging) + "," + String(c_discharging) + "," + String(charging) + "," + String(discharging) + "#";
+    }
       delay(400);
       break;
     case 1:
+    {
       str = "@" + wire215.GetData()+"," + String(c_charging) + "," + String(c_discharging) + "," + String(charging) + "," + String(discharging) + "#";
+    }
       delay(400);
       break;
     case 2:
+    {
       str = "@" + wire320.GetData()+"," + String(c_charging) + "," + String(c_discharging) + "," + String(charging) + "," + String(discharging) + "#";
+    }
       delay(400);
       break;
   }  
@@ -238,7 +249,8 @@ void loop() {
         }
         break;
       case 'f':
-        if(type == 0) stnd.FullAccess();       
+        if(type == 0) stnd.FullAccess(); 
+        else if(type == 2) wire215._fReset();      
         break;
       case 'u':
         if(type == 0) stnd.Unseal();
@@ -254,6 +266,7 @@ void loop() {
         discharging = false;
         digitalWrite(CHARGE, LOW);
         digitalWrite(DISCHARGE, LOW);
+        resetFunc();
         break;
       case 'k':
         if(sen == true){
@@ -264,10 +277,6 @@ void loop() {
         break;            
     }
   }
-  //if (sen){
-  //  Serial.println(str);
-  //  Serial.flush();
-  //}
 }
 
 void sendData() {
@@ -392,10 +401,6 @@ void cellNumber(){
         Serial.println("2 cells");
         MAX_VOLTAGE = 8250;
         MIN_VOLTAGE = 5900;
-      }else if(stnd.readCellsNum() == 3){
-        Serial.println("4 cells");
-      // MAX_VOLTAGE = 12350;
-      // MIN_VOLTAGE = 11970;      
       }
       break;
     case 1: 
@@ -407,13 +412,10 @@ void cellNumber(){
         Serial.println("2 cells");
         MAX_VOLTAGE = 8250;
         MIN_VOLTAGE = 5900;      
+        //MIN_VOLTAGE = 7200; 
       }else if(wire215._cellNum() == 3){        
         Serial.println("3 cells");
       // MAX_VOLTAGE = 16550;
-      // MIN_VOLTAGE = 14260;
-      }else if(wire215._cellNum() == 4){
-        Serial.println("4 cells");
-        // MAX_VOLTAGE = 16550;
       // MIN_VOLTAGE = 14260;
       }
       break;
@@ -422,13 +424,10 @@ void cellNumber(){
         Serial.println("2 cells");
         MAX_VOLTAGE = 8250;
         MIN_VOLTAGE = 5900;      
+        //MIN_VOLTAGE = 7200;      
       }else if(wire320._cellNum() == 3){        
         Serial.println("3 cells");
       // MAX_VOLTAGE = 16550;
-      // MIN_VOLTAGE = 14260;
-      }else if(wire320._cellNum() == 4){
-        Serial.println("4 cells");
-        // MAX_VOLTAGE = 16550;
       // MIN_VOLTAGE = 14260;
       }
       break;
